@@ -148,8 +148,15 @@
 
 @section('scripts')
 <script src="{{asset('js/chat.js')}}"></script>
-
+{{-- <script src="http://{{ Request::getHost() }}:6001/socket.io/socket.io.js"></script> --}}
 <script>
+    window.App = {
+        csrfToken: '{{ csrf_token() }}',
+        stripePublicKey: '{{ config('services.stripe.key') }}'
+    }
+</script>
+<script>
+   
     new Vue({
         el:'#chat-app',
         data() {
@@ -166,6 +173,19 @@
             this.message = ""
         }
       },
+      
+      mounted(){
+        // window.Echo = new Echo({
+        //     broadcaster:'socket-io'
+        // })
+       
+       const echo = new Echo({
+            broadcaster:'soket-io'
+       })
+       echo.jion('group-tv')
+        
+      }
+      
     })
  
 </script>

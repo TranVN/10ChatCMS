@@ -22,8 +22,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::prefix('chat')->group(function () {
         Route::get('/',"ChatsController@index");
         Route::post('/store-mes',function(Request $req){
-            broadcast(new MessagePushed(auth()->user(),$req->message));
-            return $req->message;
+            broadcast(new MessagePushed(auth()->user()->id,$req->message));
+            // action('ChatsController@index',$req);
+            return [
+                'user' => auth()->user()->id,
+                'message' => $req->message,
+            ];
         });
     });
 });
