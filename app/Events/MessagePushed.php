@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MessagePushed
+class MessagePushed implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,9 +19,14 @@ class MessagePushed
      *
      * @return void
      */
-    public function __construct()
+    public $user;
+    public $message;
+
+    public function __construct($user , $message)
     {
         //
+        $this->user = $user;
+        $this->message = $message;
     }
 
     /**
@@ -31,6 +36,14 @@ class MessagePushed
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        // return new PrivateChannel('channel-name');
+        return new PresenceChannel('group-tv');
+    }
+    public function broadcastWith()
+    {
+        return [
+            'user'=>$this->user,
+            'message'=>$this->message, 
+        ];
     }
 }
